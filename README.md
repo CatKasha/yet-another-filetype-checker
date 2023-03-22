@@ -1,0 +1,1 @@
+# yet-another-filetype-checker
