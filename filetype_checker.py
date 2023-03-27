@@ -5,6 +5,7 @@ def guess_ext(f_path):
     f_size = os.path.getsize(f_path)
     with open(f_path, "rb") as fab:
         buf = fab.read(8)
+        buf += b"0" * (8 - len(buf))
 
 
         # GIF
