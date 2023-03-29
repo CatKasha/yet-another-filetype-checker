@@ -94,6 +94,12 @@ def guess_ext(f_path):
             return "qoi"
 
 
+        # BMP
+        if (buf[0] == 0x42 and
+            buf[1] == 0x4D):
+            return "bmp"
+
+
         # there no other matcher, return None
         return None
 
