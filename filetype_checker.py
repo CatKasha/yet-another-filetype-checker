@@ -100,6 +100,22 @@ def guess_ext(f_path):
             return "bmp"
 
 
+        # increase buf to 12 bytes
+        buf += fab.read(4)
+        buf += b"0" * (12 - len(buf))
+
+
+        # 3GP
+        if (buf[4] == 0x66 and
+            buf[5] == 0x74 and
+            buf[6] == 0x79 and
+            buf[7] == 0x70 and
+            buf[8] == 0x33 and
+            buf[9] == 0x67 and
+            buf[10] == 0x70):
+            return "3gp"
+
+
         # there no other matcher, return None
         return None
 

@@ -13,6 +13,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - mp3
 - qoi
 - bmp
+- 3gp
 
 ## how to use
 as standalone app:
