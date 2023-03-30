@@ -75,7 +75,7 @@ def guess_ext(f_path):
         buf += b"0" * (12 - len(buf))
 
 
-        # ID3 tag skip'er
+        # ID3v2 tag skip'er
         # reference:
         # http://id3.org/id3v2.4.0-structure (via Wayback Machine)
         buf_after_id3 = buf
@@ -95,8 +95,8 @@ def guess_ext(f_path):
             
             fab.seek(id3_tag_size, 0)
 
-            buf_after_id3 = fab.read(2)
-            buf_after_id3 += b"0" * (2 - len(buf_after_id3))
+            buf_after_id3 = fab.read(4)
+            buf_after_id3 += b"0" * (4 - len(buf_after_id3))
 
             fab.seek(12, 0)
 
@@ -113,6 +113,14 @@ def guess_ext(f_path):
                 buf_after_id3[1] == 0xFA or  # MPEG 1 with error protection
                 buf_after_id3[1] == 0xFB):   # MPEG 1 w/o error protection
                 return "mp3"
+
+
+        # FLAC
+        if (buf_after_id3[0] == 0x66 and
+            buf_after_id3[1] == 0x4C and
+            buf_after_id3[2] == 0x61 and
+            buf_after_id3[3] == 0x43):
+            return "flac"
 
 
         # 3GP

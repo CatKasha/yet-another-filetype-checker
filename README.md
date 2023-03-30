@@ -13,12 +13,13 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - qoi
 - bmp
 - mp3
+- flac
 - 3gp
 
 ## how to use
 as standalone app:
 ```shell
-.\filetype_checker.py sapmle.png
+.\filetype_checker.py sample.png
 apng
 ```
 
