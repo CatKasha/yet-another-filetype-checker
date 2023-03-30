@@ -56,36 +56,6 @@ def guess_ext(f_path):
             return "png"
 
 
-        # MP3
-        # references:
-        # https://www.datavoyage.com/mpgscript/mpeghdr.htm
-        # https://en.wikipedia.org/wiki/MP3#/media/File:Mp3filestructure.svg
-        if (buf[0] == 0xFF):
-            if (buf[1] == 0xE2 or  # MPEG 2.5 with error protection
-                buf[1] == 0xE3 or  # MPEG 2.5 w/o error protection
-                buf[1] == 0xF2 or  # MPEG 2 with error protection
-                buf[1] == 0xF3 or  # MPEG 2 w/o error protection
-                buf[1] == 0xFA or  # MPEG 1 with error protection
-                buf[1] == 0xFB):   # MPEG 1 w/o error protection
-                return "mp3"
-
-        if (buf[0] == 0x49 and
-            buf[1] == 0x44 and
-            buf[2] == 0x33):
-            return "mp3"
-
-            # NOTE according to https://www.garykessler.net/library/file_sigs.html
-            # there a .koz format that uses same ID3 header, but i cant find that file online
-            # so check MP3 header after ID3 chunk?
-            # half done ID3 chunk size reader
-            #
-            # buf += fab.read(2)
-            # buf_2 = ""
-            # for i in buf[6:10]:
-            #     buf_2 += bin(i)[2:].zfill(7)
-            # buf_2 = int(buf_2, 2) + 10
-
-
         # QOI
         if (buf[0] == 0x71 and
             buf[1] == 0x6F and
@@ -103,6 +73,46 @@ def guess_ext(f_path):
         # increase buf to 12 bytes
         buf += fab.read(4)
         buf += b"0" * (12 - len(buf))
+
+
+        # ID3 tag skip'er
+        # reference:
+        # http://id3.org/id3v2.4.0-structure (via Wayback Machine)
+        buf_after_id3 = buf
+        if (buf[0] == 0x49 and
+            buf[1] == 0x44 and
+            buf[2] == 0x33):
+
+            id3_flags = bin(buf[5])[2:].zfill(8)
+            footer_present = bool(int(id3_flags[3]))
+            id3_tag_size = ""
+            for i in buf[6:10]:
+                id3_tag_size += bin(i)[2:].zfill(7)
+
+            id3_tag_size = int(id3_tag_size, 2) + 10
+            if (footer_present):
+                id3_tag_size += 10
+            
+            fab.seek(id3_tag_size, 0)
+
+            buf_after_id3 = fab.read(2)
+            buf_after_id3 += b"0" * (2 - len(buf_after_id3))
+
+            fab.seek(12, 0)
+
+
+        # MP3
+        # references:
+        # https://www.datavoyage.com/mpgscript/mpeghdr.htm
+        # https://en.wikipedia.org/wiki/MP3#/media/File:Mp3filestructure.svg
+        if (buf_after_id3[0] == 0xFF):
+            if (buf_after_id3[1] == 0xE2 or  # MPEG 2.5 with error protection
+                buf_after_id3[1] == 0xE3 or  # MPEG 2.5 w/o error protection
+                buf_after_id3[1] == 0xF2 or  # MPEG 2 with error protection
+                buf_after_id3[1] == 0xF3 or  # MPEG 2 w/o error protection
+                buf_after_id3[1] == 0xFA or  # MPEG 1 with error protection
+                buf_after_id3[1] == 0xFB):   # MPEG 1 w/o error protection
+                return "mp3"
 
 
         # 3GP

@@ -10,9 +10,9 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - gif
 - png
 - apng
-- mp3
 - qoi
 - bmp
+- mp3
 - 3gp
 
 ## how to use
