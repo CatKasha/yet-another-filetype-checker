@@ -75,6 +75,17 @@ def guess_ext(f_path):
         buf += b"0" * (12 - len(buf))
 
 
+        # 3GP
+        if (buf[4] == 0x66 and
+            buf[5] == 0x74 and
+            buf[6] == 0x79 and
+            buf[7] == 0x70 and
+            buf[8] == 0x33 and
+            buf[9] == 0x67 and
+            buf[10] == 0x70):
+            return "3gp"
+
+
         # ID3v2 tag skip'er
         # reference:
         # http://id3.org/id3v2.4.0-structure (via Wayback Machine)
@@ -123,15 +134,33 @@ def guess_ext(f_path):
             return "flac"
 
 
-        # 3GP
-        if (buf[4] == 0x66 and
-            buf[5] == 0x74 and
-            buf[6] == 0x79 and
-            buf[7] == 0x70 and
-            buf[8] == 0x33 and
-            buf[9] == 0x67 and
-            buf[10] == 0x70):
-            return "3gp"
+        # EBML, part of MKV and WEBM
+        # references:
+        # https://matroska.sourceforge.net/technical/specs/index.html
+        # https://www.webmproject.org/docs/container/
+        # https://yoooonghyun.gitbook.io/documents/multimedia/containers/webm
+        if (buf[0] == 0x1A and
+            buf[1] == 0x45 and
+            buf[2] == 0xDF and
+            buf[3] == 0xA3):
+            another_buf = bin(buf[4])[2:].zfill(8)
+            len_ebml_header_data_size = 0
+            for i in range(len(another_buf)):
+                if ("1" == another_buf[i]):
+                    len_ebml_header_data_size = i + 1
+                    break
+
+            # seems every element in EBML header have fixed size except DocType
+            # jump straight to DocType and check whats there
+            # EBML header + length of EBML header data size + 4 * 4b (2b element ID + 1b data length + 1b data)
+            fab.seek(4 + len_ebml_header_data_size + 16, 0)
+            buf = fab.read(11)
+            buf += b"0" * (11 - len(buf))
+
+            if (buf == bytearray([0x42, 0x82, 0x88, 0x6D, 0x61, 0x74, 0x72, 0x6F, 0x73, 0x6B, 0x61])):
+                return "mkv"
+            if (buf[:7] == bytearray([0x42, 0x82, 0x84, 0x77, 0x65, 0x62, 0x6D])):
+                return "webm"
 
 
         # there no other matcher, return None
