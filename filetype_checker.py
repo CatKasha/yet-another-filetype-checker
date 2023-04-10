@@ -8,30 +8,32 @@ def guess_ext(f_path):
         buf += b"0" * (8 - len(buf))
 
 
+        # JPEG
+        if (buf[0] == 0xFF and
+            buf[1] == 0xD8 and
+            buf[2] == 0xFF):
+            return "jpg"
+
+
         # GIF
         if (buf[0] == 0x47 and
             buf[1] == 0x49 and
-            buf[2] == 0x46):
-            # 87a or 89a
-            if ((buf[3] == 0x38 and
-                 buf[4] == 0x37 and
-                 buf[5] == 0x61)
-                 or
-                (buf[3] == 0x38 and
-                 buf[4] == 0x39 and
-                 buf[5] == 0x61)):
-                return "gif"
+            buf[2] == 0x46 and
+            buf[3] == 0x38 and
+           (buf[4] == 0x37 or buf[4] == 0x39) and
+            buf[5] == 0x61):
+            return "gif"
 
 
         # PNG
         if (buf[0] == 0x89 and
             buf[1] == 0x50 and
-            buf[2] == 0x4e and
+            buf[2] == 0x4E and
             buf[3] == 0x47 and
-            buf[4] == 0x0d and
-            buf[5] == 0x0a and
-            buf[6] == 0x1a and
-            buf[7] == 0x0a):
+            buf[4] == 0x0D and
+            buf[5] == 0x0A and
+            buf[6] == 0x1A and
+            buf[7] == 0x0A):
 
             # APNG
             # references:
