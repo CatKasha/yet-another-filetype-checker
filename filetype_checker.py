@@ -8,6 +8,15 @@ def guess_ext(f_path):
         buf += b"0" * (8 - len(buf))
 
 
+        # PDF
+        if (buf[0] == 0x25 and
+            buf[1] == 0x50 and
+            buf[2] == 0x44 and
+            buf[3] == 0x46 and
+            buf[4] == 0x2D):
+            return "pdf"
+
+
         # JPEG
         if (buf[0] == 0xFF and
             buf[1] == 0xD8 and
