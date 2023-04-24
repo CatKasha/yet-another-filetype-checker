@@ -8,6 +8,16 @@ def guess_ext(f_path):
         buf += b"0" * (8 - len(buf))
 
 
+        # 7z
+        if (buf[0] == 0x37 and
+            buf[1] == 0x7A and
+            buf[2] == 0xBC and
+            buf[3] == 0xAF and
+            buf[4] == 0x27 and
+            buf[5] == 0x1C):
+            return "7z"
+
+
         # PDF
         if (buf[0] == 0x25 and
             buf[1] == 0x50 and
@@ -114,7 +124,7 @@ def guess_ext(f_path):
             id3_tag_size = int(id3_tag_size, 2) + 10
             if (footer_present):
                 id3_tag_size += 10
-            
+
             fab.seek(id3_tag_size, 0)
 
             buf_after_id3 = fab.read(4)
@@ -177,6 +187,7 @@ def guess_ext(f_path):
         # there no other matcher, return None
         return None
 
+
 def main():
     if (len(sys.argv) < 2):
         sys.exit("file path not given")
@@ -186,6 +197,7 @@ def main():
         print(guess_ext(file_path))
     else:
         sys.exit("given path is not a file")
+
 
 if (__name__ == "__main__"):
     main()
