@@ -96,6 +96,18 @@ def guess_ext(f_path):
         buf += b"0" * (12 - len(buf))
 
 
+        # MOV
+        if (buf[4] == 0x66 and
+            buf[5] == 0x74 and
+            buf[6] == 0x79 and
+            buf[7] == 0x70 and
+            buf[8] == 0x71 and
+            buf[9] == 0x74 and
+            buf[10] == 0x20 and
+            buf[11] == 0x20):
+            return "mov"
+
+
         # 3GP
         if (buf[4] == 0x66 and
             buf[5] == 0x74 and
