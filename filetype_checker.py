@@ -58,7 +58,6 @@ def guess_ext(f_path):
             # references:
             # https://wiki.mozilla.org/APNG_Specification#Structure
             # http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html
-
             while (f_size > fab.tell()):
                 buf = fab.read(8)
 
@@ -91,32 +90,35 @@ def guess_ext(f_path):
             return "bmp"
 
 
-        # increase buf to 12 bytes
-        buf += fab.read(4)
-        buf += b"0" * (12 - len(buf))
-
-
-        # MOV
+        # ftyp reader
+        # reference:
+        # https://ftyps.com/what.html
         if (buf[4] == 0x66 and
             buf[5] == 0x74 and
             buf[6] == 0x79 and
-            buf[7] == 0x70 and
-            buf[8] == 0x71 and
-            buf[9] == 0x74 and
-            buf[10] == 0x20 and
-            buf[11] == 0x20):
-            return "mov"
+            buf[7] == 0x70):
+            ftyp_size = int.from_bytes(buf[0:4], byteorder="big")
+
+            ftyp_data = fab.read(ftyp_size - 8)
+            fab.seek(8, 0)
+
+            ftyp_major = ftyp_data[0:4].decode("ascii", errors="ignore")
+            # ftyp_compat = []
+            # for i in range(8, ftyp_size - 8, 4):
+            #     ftyp_compat.append(ftyp_data[i : i + 4].decode("ascii", errors="ignore"))
+
+            # MOV
+            if (ftyp_major == "qt  "):
+                return "mov"
+
+            # 3GP
+            if (ftyp_major[0:3] == "3gp"):
+                return "3gp"
 
 
-        # 3GP
-        if (buf[4] == 0x66 and
-            buf[5] == 0x74 and
-            buf[6] == 0x79 and
-            buf[7] == 0x70 and
-            buf[8] == 0x33 and
-            buf[9] == 0x67 and
-            buf[10] == 0x70):
-            return "3gp"
+        # increase buf to 10 bytes
+        buf += fab.read(2)
+        buf += b"0" * (10 - len(buf))
 
 
         # ID3v2 tag skip'er
@@ -142,7 +144,7 @@ def guess_ext(f_path):
             buf_after_id3 = fab.read(4)
             buf_after_id3 += b"0" * (4 - len(buf_after_id3))
 
-            fab.seek(12, 0)
+            fab.seek(10, 0)
 
 
         # MP3
@@ -187,12 +189,16 @@ def guess_ext(f_path):
             # jump straight to DocType and check whats there
             # EBML header + length of EBML header data size + 4 * 4b (2b element ID + 1b data length + 1b data)
             fab.seek(4 + len_ebml_header_data_size + 16, 0)
-            buf = fab.read(11)
-            buf += b"0" * (11 - len(buf))
+            another_buf = fab.read(11)
+            another_buf += b"0" * (11 - len(another_buf))
+            fab.seek(10, 0)
 
-            if (buf == bytearray([0x42, 0x82, 0x88, 0x6D, 0x61, 0x74, 0x72, 0x6F, 0x73, 0x6B, 0x61])):
+            # MKV
+            if (another_buf == bytearray([0x42, 0x82, 0x88, 0x6D, 0x61, 0x74, 0x72, 0x6F, 0x73, 0x6B, 0x61])):
                 return "mkv"
-            if (buf[:7] == bytearray([0x42, 0x82, 0x84, 0x77, 0x65, 0x62, 0x6D])):
+
+            # WEBM
+            if (another_buf[:7] == bytearray([0x42, 0x82, 0x84, 0x77, 0x65, 0x62, 0x6D])):
                 return "webm"
 
 
