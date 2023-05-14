@@ -17,6 +17,8 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - bmp
 - mov
 - 3gp
+- 3g2
+- avif
 - mp3
 - flac
 - mkv

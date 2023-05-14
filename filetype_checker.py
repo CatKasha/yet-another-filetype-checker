@@ -103,6 +103,7 @@ def guess_ext(f_path):
             fab.seek(8, 0)
 
             ftyp_major = ftyp_data[0:4].decode("ascii", errors="ignore")
+            # ftyp_version = int.from_bytes(buf[4:8], byteorder="big")
             # ftyp_compat = []
             # for i in range(8, ftyp_size - 8, 4):
             #     ftyp_compat.append(ftyp_data[i : i + 4].decode("ascii", errors="ignore"))
@@ -115,6 +116,13 @@ def guess_ext(f_path):
             if (ftyp_major[0:3] == "3gp"):
                 return "3gp"
 
+            # 3G2
+            if (ftyp_major[0:3] == "3g2"):
+                return "3g2"
+
+            # AVIF
+            if (ftyp_major == "avif"):
+                return "avif"
 
         # increase buf to 10 bytes
         buf += fab.read(2)
