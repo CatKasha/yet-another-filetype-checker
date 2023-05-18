@@ -112,17 +112,20 @@ def guess_ext(f_path):
             if (ftyp_major == "qt  "):
                 return "mov"
 
-            # 3GP
-            if (ftyp_major[0:3] == "3gp"):
-                return "3gp"
-
-            # 3G2
-            if (ftyp_major[0:3] == "3g2"):
-                return "3g2"
-
             # AVIF
             if (ftyp_major == "avif"):
                 return "avif"
+
+            # disabled until i figured out how to properly detect this format
+
+            # 3GP
+            # if (ftyp_major[0:3] == "3gp"):
+            #     return "3gp"
+
+            # 3G2
+            # if (ftyp_major[0:3] == "3g2"):
+            #     return "3g2"
+
 
         # increase buf to 10 bytes
         buf += fab.read(2)
