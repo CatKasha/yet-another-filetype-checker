@@ -21,6 +21,9 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - flac
 - mkv
 - webm
+- webp
+- avi
+- wav
 
 ## how to use
 as standalone app:

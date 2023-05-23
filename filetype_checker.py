@@ -127,9 +127,9 @@ def guess_ext(f_path):
             #     return "3g2"
 
 
-        # increase buf to 10 bytes
-        buf += fab.read(2)
-        buf += b"0" * (10 - len(buf))
+        # increase buf to 12 bytes
+        buf += fab.read(4)
+        buf += b"0" * (12 - len(buf))
 
 
         # ID3v2 tag skip'er
@@ -155,7 +155,7 @@ def guess_ext(f_path):
             buf_after_id3 = fab.read(4)
             buf_after_id3 += b"0" * (4 - len(buf_after_id3))
 
-            fab.seek(10, 0)
+            fab.seek(12, 0)
 
 
         # MP3
@@ -180,7 +180,7 @@ def guess_ext(f_path):
             return "flac"
 
 
-        # EBML, part of MKV and WEBM
+        # EBML reader
         # references:
         # https://matroska.sourceforge.net/technical/specs/index.html
         # https://www.webmproject.org/docs/container/
@@ -202,7 +202,7 @@ def guess_ext(f_path):
             fab.seek(4 + len_ebml_header_data_size + 16, 0)
             another_buf = fab.read(11)
             another_buf += b"0" * (11 - len(another_buf))
-            fab.seek(10, 0)
+            fab.seek(12, 0)
 
             # MKV
             if (another_buf == bytearray([0x42, 0x82, 0x88, 0x6D, 0x61, 0x74, 0x72, 0x6F, 0x73, 0x6B, 0x61])):
@@ -211,6 +211,30 @@ def guess_ext(f_path):
             # WEBM
             if (another_buf[:7] == bytearray([0x42, 0x82, 0x84, 0x77, 0x65, 0x62, 0x6D])):
                 return "webm"
+
+
+        # RIFF reader
+        # references:
+        # https://developers.google.com/speed/webp/docs/riff_container?hl=en#riff_file_format
+        # https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
+        # https://learn.microsoft.com/en-us/windows/win32/directshow/avi-riff-file-reference
+        if (buf[0] == 0x52 and
+            buf[1] == 0x49 and
+            buf[2] == 0x46 and
+            buf[3] == 0x46):
+            format_type = buf[8:12].decode("ascii", errors="ignore")
+
+            # WEBP
+            if(format_type == "WEBP"):
+                return "webp"
+
+            # AVI
+            if(format_type == "AVI "):
+                return "avi"
+
+            # WAV
+            if(format_type == "WAVE"):
+                return "wav"
 
 
         # there no other matcher, return None
