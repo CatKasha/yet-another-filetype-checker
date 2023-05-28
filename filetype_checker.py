@@ -8,6 +8,17 @@ def guess_ext(f_path):
         buf += b"0" * (8 - len(buf))
 
 
+        # SWF
+        # reference:
+        # https://web.archive.org/web/20130202203813/http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/swf/pdf/swf-file-format-spec.pdf
+        if ((buf[0] == 0x46 or
+             buf[0] == 0x43 or
+             buf[0] == 0x5A) and
+            buf[1] == 0x57 and
+            buf[2] == 0x53):
+            return "swf"
+
+
         # 7z
         if (buf[0] == 0x37 and
             buf[1] == 0x7A and
@@ -134,7 +145,7 @@ def guess_ext(f_path):
 
         # ID3v2 tag skip'er
         # reference:
-        # http://id3.org/id3v2.4.0-structure (via Wayback Machine)
+        # https://web.archive.org/web/20070609163800/http://www.id3.org/id3v2.4.0-structure
         buf_after_id3 = buf
         if (buf[0] == 0x49 and
             buf[1] == 0x44 and
