@@ -200,17 +200,18 @@ def guess_ext(f_path):
             buf[1] == 0x45 and
             buf[2] == 0xDF and
             buf[3] == 0xA3):
+            another_buf = buf
             def parce_data_size(init_pos):
-                another_buf = bin(buf[init_pos])[2:].zfill(8)
+                first_byte = bin(another_buf[init_pos])[2:].zfill(8)
                 data_size_len = 0
-                for i in range(len(another_buf)):
-                    if ("1" == another_buf[i]):
+                for i in range(len(first_byte)):
+                    if ("1" == first_byte[i]):
                         data_size_len = i + 1
                         break
 
-                data_size = another_buf[data_size_len:]
+                data_size = first_byte[data_size_len:]
                 for i in range(data_size_len - 1):
-                    data_size += bin(buf[init_pos + 1 + i])[2:].zfill(8)
+                    data_size += bin(another_buf[init_pos + 1 + i])[2:].zfill(8)
 
                 return data_size_len, int(data_size, 2)
 
