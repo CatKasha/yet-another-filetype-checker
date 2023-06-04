@@ -200,27 +200,38 @@ def guess_ext(f_path):
             buf[1] == 0x45 and
             buf[2] == 0xDF and
             buf[3] == 0xA3):
-            another_buf = bin(buf[4])[2:].zfill(8)
-            len_ebml_header_data_size = 0
-            for i in range(len(another_buf)):
-                if ("1" == another_buf[i]):
-                    len_ebml_header_data_size = i + 1
-                    break
+            def parce_data_size(init_pos):
+                another_buf = bin(buf[init_pos])[2:].zfill(8)
+                data_size_len = 0
+                for i in range(len(another_buf)):
+                    if ("1" == another_buf[i]):
+                        data_size_len = i + 1
+                        break
 
-            # seems every element in EBML header have fixed size except DocType
-            # jump straight to DocType and check whats there
-            # EBML header + length of EBML header data size + 4 * 4b (2b element ID + 1b data length + 1b data)
-            fab.seek(4 + len_ebml_header_data_size + 16, 0)
-            another_buf = fab.read(11)
-            another_buf += b"0" * (11 - len(another_buf))
+                data_size = another_buf[data_size_len:]
+                for i in range(data_size_len - 1):
+                    data_size += bin(buf[init_pos + 1 + i])[2:].zfill(8)
+
+                return data_size_len, int(data_size, 2)
+
+            ebml_header_data_size_len, ebml_header_data_size = parce_data_size(4)
+
+            fab.seek(4 + ebml_header_data_size_len, 0)
+            another_buf = fab.read(ebml_header_data_size)
             fab.seek(12, 0)
 
+            doctype_index = another_buf.find(b"\x42\x82") + 2
+            doctype_data_size_len, doctype_data_size = parce_data_size(doctype_index)
+            doctype_data = another_buf[doctype_index + doctype_data_size_len : doctype_index + doctype_data_size_len + doctype_data_size]
+
+            doctype_data = doctype_data.decode("ascii", errors="ignore")
+
             # MKV
-            if (another_buf == bytearray([0x42, 0x82, 0x88, 0x6D, 0x61, 0x74, 0x72, 0x6F, 0x73, 0x6B, 0x61])):
+            if ("matroska" in doctype_data):
                 return "mkv"
 
             # WEBM
-            if (another_buf[:7] == bytearray([0x42, 0x82, 0x84, 0x77, 0x65, 0x62, 0x6D])):
+            if ("webm" in doctype_data):
                 return "webm"
 
 
