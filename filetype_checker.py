@@ -20,13 +20,24 @@ def guess_ext(f_path):
 
 
         # 7z
+        # reference:
+        # https://py7zr.readthedocs.io/en/v0.20.5/archive_format.html#signature-header
         if (buf[0] == 0x37 and
             buf[1] == 0x7A and
             buf[2] == 0xBC and
             buf[3] == 0xAF and
             buf[4] == 0x27 and
             buf[5] == 0x1C):
-            return "7z"
+            another_buf = buf + fab.read(24)
+            fab.seek(8, 0)
+
+            header_db_offset = int.from_bytes(another_buf[12:20], byteorder="little")
+            header_db_size = int.from_bytes(another_buf[20:28], byteorder="little")
+
+            if (f_size == 32 + header_db_offset + header_db_size):
+                return "7z"
+            # else:
+            #    return "7z.001"
 
 
         # PDF

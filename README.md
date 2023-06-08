@@ -8,7 +8,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 
 ## supported formats
 - swf
-- 7z
+- 7z (only non splitted archive)
 - pdf
 - jpg
 - gif
