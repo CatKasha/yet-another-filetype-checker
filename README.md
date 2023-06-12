@@ -12,6 +12,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - pdf
 - jpg
 - gif
+- jif
 - png
 - apng
 - qoi

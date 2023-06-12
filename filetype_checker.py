@@ -66,6 +66,16 @@ def guess_ext(f_path):
             return "gif"
 
 
+        # JIF
+        if (buf[0] == 0x4A and
+            buf[1] == 0x49 and
+            buf[2] == 0x46 and
+            buf[3] == 0x39 and
+            buf[4] == 0x39 and
+            buf[5] == 0x61):
+            return "jif"
+
+
         # PNG
         if (buf[0] == 0x89 and
             buf[1] == 0x50 and
