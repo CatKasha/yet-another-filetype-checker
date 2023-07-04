@@ -145,7 +145,7 @@ def guess_ext(f_path):
                 return "mov"
 
             # AVIF
-            if (ftyp_major == "avif"):
+            if (ftyp_major == "avif" or ftyp_major == "avis"):
                 return "avif"
 
             # disabled until i figured out how to properly detect this format
