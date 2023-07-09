@@ -134,19 +134,28 @@ def guess_ext(f_path):
             ftyp_data = fab.read(ftyp_size - 8)
             fab.seek(8, 0)
 
-            ftyp_major = ftyp_data[0:4].decode("ascii", errors="ignore")
+            major_brand = ftyp_data[0:4].decode("ascii", errors="ignore")
             # ftyp_version = int.from_bytes(buf[4:8], byteorder="big")
-            # ftyp_compat = []
-            # for i in range(8, ftyp_size - 8, 4):
-            #     ftyp_compat.append(ftyp_data[i : i + 4].decode("ascii", errors="ignore"))
+            compatible_brands = []
+            for i in range(8, ftyp_size - 8, 4):
+                compatible_brands.append(ftyp_data[i : i + 4].decode("ascii", errors="ignore"))
 
             # MOV
-            if (ftyp_major == "qt  "):
+            if (major_brand == "qt  "):
                 return "mov"
 
             # AVIF
-            if (ftyp_major == "avif" or ftyp_major == "avis"):
+            # reference:
+            # https://aomediacodec.github.io/av1-avif/v1.1.0.html#brands
+            if (major_brand == "avif" or major_brand == "avis"):
                 return "avif"
+
+            # MP4
+            if (major_brand in ["mp42", "isom"]):
+                mp4_brands = ["mp41", "mp42"]
+                for brand in mp4_brands:
+                    if (brand in compatible_brands):
+                        return "mp4"
 
             # disabled until i figured out how to properly detect this format
 
