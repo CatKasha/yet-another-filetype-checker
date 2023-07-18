@@ -144,11 +144,13 @@ def guess_ext(f_path):
             if (major_brand == "qt  "):
                 return "mov"
 
+
             # AVIF
             # reference:
             # https://aomediacodec.github.io/av1-avif/v1.1.0.html#brands
             if (major_brand == "avif" or major_brand == "avis"):
                 return "avif"
+
 
             # MP4
             if (major_brand in ["mp42", "isom"]):
@@ -157,11 +159,30 @@ def guess_ext(f_path):
                     if (brand in compatible_brands):
                         return "mp4"
 
-            # disabled until i figured out how to properly detect this format
 
             # 3GP
-            # if (ftyp_major[0:3] == "3gp"):
-            #     return "3gp"
+            # reference:
+            # https://www.etsi.org/deliver/etsi_ts/126200_126299/126244/17.00.00_60/ts_126244v170000p.pdf
+            if (major_brand == "3gp4" and "3gp4" in compatible_brands):
+                return "3gp"
+
+            # 3gh9 is not in this list
+            three_gp_brands = ["3gp5", "3gp6", "3gp7", "3gp8",
+                               "3gr6",
+                               "3gs6",
+                               "3ge7",
+                               "3gg6",
+                               "3gt8", "3gt9"]
+
+            if (major_brand in three_gp_brands):
+                if (major_brand in compatible_brands):
+                    req_brands = ["isom", "avc1", "iso2"]
+                    for brand in req_brands:
+                        if (brand in compatible_brands):
+                            return "3gp"
+
+
+            # disabled until i figured out how to properly detect this format
 
             # 3G2
             # if (ftyp_major[0:3] == "3g2"):
