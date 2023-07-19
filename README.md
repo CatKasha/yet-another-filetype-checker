@@ -21,6 +21,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - avif
 - mp4
 - 3gp
+- 3g2
 - mp3
 - flac
 - mkv

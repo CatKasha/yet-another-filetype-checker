@@ -57,6 +57,9 @@ def guess_ext(f_path):
 
 
         # GIF
+        # references:
+        # https://www.w3.org/Graphics/GIF/spec-gif87.txt
+        # https://www.w3.org/Graphics/GIF/spec-gif89a.txt
         if (buf[0] == 0x47 and
             buf[1] == 0x49 and
             buf[2] == 0x46 and
@@ -67,6 +70,8 @@ def guess_ext(f_path):
 
 
         # JIF
+        # reference:
+        # https://web.archive.org/web/20010603113404/http://jeff.cafe.net/jif/
         if (buf[0] == 0x4A and
             buf[1] == 0x49 and
             buf[2] == 0x46 and
@@ -182,11 +187,12 @@ def guess_ext(f_path):
                             return "3gp"
 
 
-            # disabled until i figured out how to properly detect this format
-
             # 3G2
-            # if (ftyp_major[0:3] == "3g2"):
-            #     return "3g2"
+            # reference:
+            # https://web.archive.org/web/20091007071048/http://www.3gpp2.org/Public_html/specs/C.S0050-B_v1.0_070521.pdf
+            if (major_brand in ["3g2a", "3g2b", "3g2c"]):
+                if (major_brand in compatible_brands):
+                    return "3g2"
 
 
         # increase buf to 12 bytes
