@@ -20,6 +20,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - mov
 - avif
 - mp4
+- m4v
 - 3gp
 - 3g2
 - mp3

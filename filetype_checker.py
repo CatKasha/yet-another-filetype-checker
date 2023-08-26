@@ -165,6 +165,12 @@ def guess_ext(f_path):
                         return "mp4"
 
 
+            # M4V
+            if (major_brand in ["M4V ", "M4VP", "M4VH"]):
+                if (major_brand in compatible_brands):
+                    return "m4v"
+
+
             # 3GP
             # reference:
             # https://www.etsi.org/deliver/etsi_ts/126200_126299/126244/17.00.00_60/ts_126244v170000p.pdf
