@@ -30,6 +30,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - webp
 - avi
 - wav
+- ts
 
 ## how to use
 as standalone app:

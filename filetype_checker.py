@@ -291,11 +291,11 @@ def guess_ext(f_path):
             doctype_data = doctype_data.decode("ascii", errors="ignore")
 
             # MKV
-            if ("matroska" in doctype_data):
+            if (doctype_data == "matroska"):
                 return "mkv"
 
             # WEBM
-            if ("webm" in doctype_data):
+            if (doctype_data == "webm"):
                 return "webm"
 
 
@@ -321,6 +321,25 @@ def guess_ext(f_path):
             # WAV
             if(format_type == "WAVE"):
                 return "wav"
+
+
+        # MPEG-TS
+        # reference:
+        # https://en.wikipedia.org/wiki/MPEG_transport_stream#Packet
+        if (buf[0] == 0x47):
+            if (f_size > 188):
+                fab.seek(1,0)
+                # check another 4 times for sync byte
+                for i in range(2, 6):
+                    if (f_size > 188 * i):
+                        fab.seek(187, 1)
+                        another_buf = fab.read(1)
+                        if (another_buf != b"\x47"):
+                            break
+                    else:
+                        break
+                else:
+                    return "ts"
 
 
         # there no other matcher, return None
