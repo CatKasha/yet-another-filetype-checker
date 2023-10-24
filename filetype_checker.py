@@ -328,7 +328,7 @@ def guess_ext(f_path):
         # https://en.wikipedia.org/wiki/MPEG_transport_stream#Packet
         if (buf[0] == 0x47):
             if (f_size > 188):
-                fab.seek(1,0)
+                fab.seek(1, 0)
                 # check another 4 times for sync byte
                 for i in range(2, 6):
                     if (f_size > 188 * i):
@@ -340,6 +340,25 @@ def guess_ext(f_path):
                         break
                 else:
                     return "ts"
+
+                fab.seek(12, 0)
+
+
+        # BitTorrent metainfo file
+        # reference:
+        # https://www.bittorrent.org/beps/bep_0003.html
+        if (buf[0] == 0x64 and
+            buf[1] == 0x38 and
+            buf[2] == 0x3A and
+            buf[3] == 0x61 and
+            buf[4] == 0x6E and
+            buf[5] == 0x6E and
+            buf[6] == 0x6F and
+            buf[7] == 0x75 and
+            buf[8] == 0x6E and
+            buf[9] == 0x63 and
+            buf[10] == 0x65):
+            return "torrent"
 
 
         # there no other matcher, return None
