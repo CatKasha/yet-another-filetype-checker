@@ -164,6 +164,9 @@ def guess_ext(f_path):
                     if (brand in compatible_brands):
                         return "mp4"
 
+            if (major_brand == "isom" and compatible_brands == ["isom"]):
+                return "mp4"
+
 
             # M4V
             if (major_brand in ["M4V ", "M4VP", "M4VH"]):
