@@ -8,6 +8,19 @@ def guess_ext(f_path):
         buf += b"0" * (8 - len(buf))
 
 
+        # ICO and CUR
+        # reference:
+        # https://en.wikipedia.org/wiki/ICO_(file_format)#Header
+        if (buf[0] == 0x00 and
+            buf[1] == 0x00 and
+            buf[3] == 0x00):
+            if (buf[2] == 0x01):
+                return "ico"
+
+            if (buf[2] == 0x02):
+                return "cur"
+
+
         # SWF
         # reference:
         # https://web.archive.org/web/20130202203813/http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/swf/pdf/swf-file-format-spec.pdf
@@ -303,10 +316,6 @@ def guess_ext(f_path):
 
 
         # RIFF reader
-        # references:
-        # https://developers.google.com/speed/webp/docs/riff_container?hl=en#riff_file_format
-        # https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
-        # https://learn.microsoft.com/en-us/windows/win32/directshow/avi-riff-file-reference
         if (buf[0] == 0x52 and
             buf[1] == 0x49 and
             buf[2] == 0x46 and
@@ -314,16 +323,28 @@ def guess_ext(f_path):
             format_type = buf[8:12].decode("ascii", errors="ignore")
 
             # WEBP
-            if(format_type == "WEBP"):
+            # reference:
+            # https://developers.google.com/speed/webp/docs/riff_container?hl=en#webp_file_header
+            if (format_type == "WEBP"):
                 return "webp"
 
             # AVI
-            if(format_type == "AVI "):
+            # reference:
+            # https://learn.microsoft.com/en-us/windows/win32/directshow/avi-riff-file-reference
+            if (format_type == "AVI "):
                 return "avi"
 
             # WAV
-            if(format_type == "WAVE"):
+            # reference:
+            # https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
+            if (format_type == "WAVE"):
                 return "wav"
+
+            # ANI
+            # reference:
+            # http://fileformats.archiveteam.org/wiki/Windows_Animated_Cursor
+            if (format_type == "ACON"):
+                return "ani"
 
 
         # MPEG-TS

@@ -7,6 +7,8 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - only works with files (not with bytearray and other stuff)
 
 ## supported formats
+- ico
+- cur
 - swf
 - 7z (only non splitted archive)
 - pdf
@@ -30,6 +32,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - webp
 - avi
 - wav
+- ani
 - ts
 - torrent
 
