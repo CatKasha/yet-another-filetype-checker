@@ -217,6 +217,20 @@ def guess_ext(f_path):
                     return "3g2"
 
 
+        # ZIP something
+        if (buf[0] == 0x50 and
+            buf[1] == 0x4B and
+            buf[2] == 0x03 and
+            buf[3] == 0x04):
+            # EPUB
+            # reference:
+            # https://www.w3.org/TR/epub/#app-media-type
+            fab.seek(30, 0)
+            if (fab.read(28) == b"mimetypeapplication/epub+zip"):
+                return "epub"
+            fab.seek(8,0)
+
+
         # increase buf to 12 bytes
         buf += fab.read(4)
         buf += b"0" * (12 - len(buf))
