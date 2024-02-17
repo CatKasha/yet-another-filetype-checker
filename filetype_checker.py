@@ -8,6 +8,20 @@ def guess_ext(f_path):
         buf += b"0" * (8 - len(buf))
 
 
+        # WOFF and WOFF2
+        # reference:
+        # https://www.w3.org/TR/WOFF/#appendix-b
+        # https://www.w3.org/TR/WOFF2/#IMT
+        if (buf[0] == 0x77 and
+            buf[1] == 0x4F and
+            buf[2] == 0x46):
+            if (buf[3] == 0x46):
+                return "woff"
+
+            if (buf[3] == 0x32):
+                return "woff2"
+
+
         # ICO and CUR
         # reference:
         # https://en.wikipedia.org/wiki/ICO_(file_format)#Header
@@ -70,7 +84,7 @@ def guess_ext(f_path):
 
 
         # GIF
-        # references:
+        # reference:
         # https://www.w3.org/Graphics/GIF/spec-gif87.txt
         # https://www.w3.org/Graphics/GIF/spec-gif89a.txt
         if (buf[0] == 0x47 and
@@ -105,7 +119,7 @@ def guess_ext(f_path):
             buf[7] == 0x0A):
 
             # APNG
-            # references:
+            # reference:
             # https://wiki.mozilla.org/APNG_Specification#Structure
             # http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html
             while (f_size > fab.tell()):
@@ -261,7 +275,7 @@ def guess_ext(f_path):
 
 
         # MP3
-        # references:
+        # reference:
         # https://www.datavoyage.com/mpgscript/mpeghdr.htm
         # https://en.wikipedia.org/wiki/MP3#/media/File:Mp3filestructure.svg
         if (buf_after_id3[0] == 0xFF):
@@ -283,7 +297,7 @@ def guess_ext(f_path):
 
 
         # EBML reader
-        # references:
+        # reference:
         # https://matroska.sourceforge.net/technical/specs/index.html
         # https://www.webmproject.org/docs/container/
         # https://yoooonghyun.gitbook.io/documents/multimedia/containers/webm
