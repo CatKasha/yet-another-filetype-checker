@@ -7,6 +7,16 @@ def guess_ext(f_path):
         buf = fab.read(8)
         buf += b"0" * (8 - len(buf))
 
+        # DDS
+        # reference:
+        # https://en.wikipedia.org/wiki/DirectDraw_Surface
+        # http://fileformats.archiveteam.org/wiki/DDS
+        if (buf[0] == 0x44 and
+            buf[1] == 0x44 and
+            buf[2] == 0x53 and
+            buf[3] == 0x20):
+            return "dds"
+
 
         # WOFF and WOFF2
         # reference:
