@@ -194,6 +194,13 @@ def guess_ext(f_path):
                 return "avif"
 
 
+            # HEIC
+            # reference:
+            # https://nokiatech.github.io/heif/technical.html
+            if (major_brand == "heic"):
+                return "heic"
+
+
             # MP4
             if (major_brand in ["isom", "iso2", "iso3", "iso4", "iso5", "iso6", "iso7", "iso8", "iso9", "mp42", "avc1"]):
                 return "mp4"

@@ -24,6 +24,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - bmp
 - mov
 - avif
+- heic
 - mp4
 - m4v
 - 3gp
