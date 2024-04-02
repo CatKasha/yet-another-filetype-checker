@@ -40,6 +40,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - ani
 - ts
 - torrent
+- jxl
 
 ## how to use
 as standalone app:

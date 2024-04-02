@@ -7,6 +7,7 @@ def guess_ext(f_path):
         buf = fab.read(8)
         buf += b"0" * (8 - len(buf))
 
+
         # DDS
         # reference:
         # https://en.wikipedia.org/wiki/DirectDraw_Surface
@@ -181,6 +182,7 @@ def guess_ext(f_path):
             compatible_brands = []
             for i in range(8, ftyp_size - 8, 4):
                 compatible_brands.append(ftyp_data[i : i + 4].decode("ascii", errors="ignore"))
+
 
             # MOV
             if (major_brand == "qt  "):
@@ -426,6 +428,26 @@ def guess_ext(f_path):
             buf[9] == 0x63 and
             buf[10] == 0x65):
             return "torrent"
+
+
+        # JPEG XL
+        # reference:
+        # https://github.com/libjxl/libjxl/blob/main/doc/format_overview.md#file-format
+        if (buf[0] == 0xFF and
+            buf[1] == 0x0A or
+            buf[0] == 0x00 and
+            buf[1] == 0x00 and
+            buf[2] == 0x00 and
+            buf[3] == 0x0C and
+            buf[4] == 0x4A and
+            buf[5] == 0x58 and
+            buf[6] == 0x4C and
+            buf[7] == 0x20 and
+            buf[8] == 0x0D and
+            buf[9] == 0x0A and
+            buf[10] == 0x87 and
+            buf[11] == 0x0A):
+            return "jxl"
 
 
         # there no other matcher, return None
