@@ -8,6 +8,21 @@ def guess_ext(f_path):
         buf += b"0" * (8 - len(buf))
 
 
+        # PSD and PSB
+        # reference:
+        # https://www.adobe.com/devnet-apps/photoshop/fileformatashtml/
+        if (buf[0] == 0x38 and
+            buf[1] == 0x42 and
+            buf[2] == 0x50 and
+            buf[3] == 0x53 and
+            buf[4] == 0x00):
+            if (buf[5] == 0x01):
+                return "psd"
+            
+            if (buf[5] == 0x02):
+                return "psb"
+
+
         # DDS
         # reference:
         # https://en.wikipedia.org/wiki/DirectDraw_Surface
