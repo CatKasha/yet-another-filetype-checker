@@ -7,6 +7,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - only works with files (not with bytearray and other stuff)
 
 ## supported formats
+- tif
 - psd
 - psb
 - dds

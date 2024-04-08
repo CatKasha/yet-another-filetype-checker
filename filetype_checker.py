@@ -8,6 +8,20 @@ def guess_ext(f_path):
         buf += b"0" * (8 - len(buf))
 
 
+        # TIFF
+        # reference:
+        # https://web.archive.org/web/20210108174645/https://www.adobe.io/content/dam/udp/en/open/standards/tiff/TIFF6.pdf
+        if (buf[0] == 0x49 and
+            buf[1] == 0x49 and
+            buf[2] == 0x2A and
+            buf[3] == 0x00 or
+            buf[0] == 0x4D and
+            buf[1] == 0x4D and
+            buf[2] == 0x00 and
+            buf[3] == 0x2A):
+            return "tif"
+
+
         # PSD and PSB
         # reference:
         # https://www.adobe.com/devnet-apps/photoshop/fileformatashtml/
