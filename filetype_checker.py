@@ -8,6 +8,16 @@ def guess_ext(f_path):
         buf += b"0" * (8 - len(buf))
 
 
+        # JPEG XR
+        # reference:
+        # https://www.itu.int/rec/T-REC-T.832-201906-I/en
+        if (buf[0] == 0x49 and
+            buf[1] == 0x49 and
+            buf[2] == 0xBC and
+            buf[3] == 0x01):
+            return "jxr"
+
+
         # TIFF
         # reference:
         # https://web.archive.org/web/20210108174645/https://www.adobe.io/content/dam/udp/en/open/standards/tiff/TIFF6.pdf

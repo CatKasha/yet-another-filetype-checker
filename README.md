@@ -2,11 +2,13 @@
 
 kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - at first reads 8 bytes and reads more if needed
+- - [python will use optimal read chunk size automatically anyway](https://docs.python.org/3/library/functions.html#open)
 - everything in single file
 - only output file extension (maybe i will add MIME type output too, idk)
 - only works with files (not with bytearray and other stuff)
 
 ## supported formats
+- jxr
 - tif
 - psd
 - psb
