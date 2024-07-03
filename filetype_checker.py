@@ -489,6 +489,29 @@ def guess_ext(f_path):
             return "jxl"
 
 
+        # HTML
+        if (buf[0] == 0x3C):
+            another_buf = buf + fab.read(3)
+            if (another_buf.lower().startswith(b"<!doctype html") or 
+                another_buf.lower().startswith(b"<html")):
+                fab.seek(f_size - 16, 0)
+                another_buf = fab.read(16)
+                if (another_buf.strip().endswith(b"</html>")):
+                    return "html"
+
+            fab.seek(12, 0)
+
+
+        # blank (fake extention, file filled with zeros/null bytes)
+        if (b"\x00" * 12 == buf):
+            while (f_size > fab.tell()):
+                buf = fab.read(1048576) # 1 megabyte
+                if (buf != b"\x00" * len(buf)):
+                    break
+            else:
+                return "blank"
+
+
         # there no other matcher, return None
         return None
 
