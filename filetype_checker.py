@@ -502,7 +502,7 @@ def guess_ext(f_path):
             fab.seek(12, 0)
 
 
-        # blank (fake extention, file filled with zeros/null bytes)
+        # blank (fake extension, file filled with zeros/null bytes)
         if (b"\x00" * 12 == buf):
             while (f_size > fab.tell()):
                 buf = fab.read(1048576) # 1 megabyte

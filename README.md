@@ -47,7 +47,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - torrent
 - jxl
 - html
-- blank (fake extention, file filled with zeros/null bytes)
+- blank (fake extension, file filled with zeros/null bytes)
 
 ## how to use
 as standalone app:
