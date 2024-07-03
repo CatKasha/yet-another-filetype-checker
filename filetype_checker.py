@@ -5,7 +5,7 @@ def guess_ext(f_path):
     f_size = os.path.getsize(f_path)
     with open(f_path, "rb") as fab:
         buf = fab.read(8)
-        buf += b"0" * (8 - len(buf))
+        buf += b"\x00" * (8 - len(buf))
 
 
         # JPEG XR
@@ -303,7 +303,7 @@ def guess_ext(f_path):
 
         # increase buf to 12 bytes
         buf += fab.read(4)
-        buf += b"0" * (12 - len(buf))
+        buf += b"\x00" * (12 - len(buf))
 
 
         # ID3v2 tag skip'er
@@ -327,7 +327,7 @@ def guess_ext(f_path):
             fab.seek(id3_tag_size, 0)
 
             buf_after_id3 = fab.read(4)
-            buf_after_id3 += b"0" * (4 - len(buf_after_id3))
+            buf_after_id3 += b"\x00" * (4 - len(buf_after_id3))
 
             fab.seek(12, 0)
 
