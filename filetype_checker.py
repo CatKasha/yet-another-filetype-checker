@@ -292,12 +292,22 @@ def guess_ext(f_path):
             buf[1] == 0x4B and
             buf[2] == 0x03 and
             buf[3] == 0x04):
+            fab.seek(30, 0)
+            another_buf = fab.read(28)
+
             # EPUB
             # reference:
             # https://www.w3.org/TR/epub/#app-media-type
-            fab.seek(30, 0)
-            if (fab.read(28) == b"mimetypeapplication/epub+zip"):
+            if (another_buf.startswith(b"mimetypeapplication/epub+zip")):
                 return "epub"
+
+
+            # OpenRaster
+            # reference:
+            # https://www.openraster.org/baseline/file-layout-spec.html
+            if (another_buf.startswith(b"mimetypeimage/openraster")):
+                return "ora"
+
             fab.seek(8,0)
 
 
