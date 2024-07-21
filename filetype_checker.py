@@ -413,14 +413,13 @@ def guess_ext(f_path):
             doctype_data_size_len, doctype_data_size = parce_data_size(doctype_index)
             doctype_data = another_buf[doctype_index + doctype_data_size_len : doctype_index + doctype_data_size_len + doctype_data_size]
 
-            doctype_data = doctype_data.decode("ascii", errors="ignore")
-
             # MKV
-            if (doctype_data == "matroska"):
+            if (doctype_data == b"matroska"):
                 return "mkv"
 
             # WEBM
-            if (doctype_data == "webm"):
+            # GStreamer Matroska muxer / GStreamer matroskamux video have b'webm\x00'
+            if (doctype_data == b"webm" or doctype_data == b"webm\x00"):
                 return "webm"
 
 
