@@ -257,6 +257,12 @@ def guess_ext(f_path):
                     return "m4v"
 
 
+            # M4A
+            if (major_brand == "M4A "):
+                if (major_brand in compatible_brands):
+                    return "m4a"
+
+
             # 3GP
             # reference:
             # https://www.etsi.org/deliver/etsi_ts/126200_126299/126244/17.00.00_60/ts_126244v170000p.pdf
@@ -342,6 +348,15 @@ def guess_ext(f_path):
             fab.seek(12, 0)
 
 
+        # AAC (ADTS?)
+        # reference:
+        # https://wiki.multimedia.cx/index.php/ADTS
+        if (buf_after_id3[0] == 0xFF):
+            another_buf = bin(buf_after_id3[1])[2:].zfill(8)
+            if (another_buf[0:4] == "1111" and another_buf[5:7] == "00"):
+                return "aac"
+
+
         # MP3
         # reference:
         # https://www.datavoyage.com/mpgscript/mpeghdr.htm
@@ -375,7 +390,7 @@ def guess_ext(f_path):
             buf[3] == 0xA3):
             another_buf = buf
             def parce_data_size(init_pos):
-                first_byte = bin(another_buf[init_pos])[2:].zfill(8)
+                first_byte = bin(another_buf[init_pos])[2:].zfill(8) # type: ignore
                 data_size_len = 0
                 for i in range(len(first_byte)):
                     if ("1" == first_byte[i]):
@@ -384,7 +399,7 @@ def guess_ext(f_path):
 
                 data_size = first_byte[data_size_len:]
                 for i in range(data_size_len - 1):
-                    data_size += bin(another_buf[init_pos + 1 + i])[2:].zfill(8)
+                    data_size += bin(another_buf[init_pos + 1 + i])[2:].zfill(8) # type: ignore
 
                 return data_size_len, int(data_size, 2)
 

@@ -32,10 +32,12 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - heic
 - mp4
 - m4v
+- m4a
 - 3gp
 - 3g2
 - epub
 - ora
+- aac
 - mp3
 - flac
 - mkv
