@@ -476,6 +476,16 @@ def guess_ext(f_path):
                 fab.seek(12, 0)
 
 
+        # MPEG-PS
+        # reference:
+        # https://en.wikipedia.org/wiki/MPEG_program_stream#Coding_details
+        if (buf[0] == 0x00 and
+            buf[1] == 0x00 and
+            buf[2] == 0x01 and
+            buf[3] == 0xBA):
+            return "mpg"
+
+
         # BitTorrent metainfo file
         # reference:
         # https://www.bittorrent.org/beps/bep_0003.html

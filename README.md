@@ -47,6 +47,7 @@ kinda similar to [filetype.py](https://github.com/h2non/filetype.py) but:
 - wav
 - ani
 - ts
+- mpg
 - torrent
 - jxl
 - html
