@@ -8,6 +8,16 @@ def guess_ext(f_path):
         buf += b"\x00" * (8 - len(buf))
 
 
+        # FLV
+        # reference:
+        # https://download.macromedia.com/f4v/video_file_format_spec_v10_1.pdf
+        if (buf[0] == 0x46 and
+            buf[1] == 0x4C and
+            buf[2] == 0x56 and
+            buf[3] == 0x01):
+            return "flv"
+
+
         # JPEG XR
         # reference:
         # https://www.itu.int/rec/T-REC-T.832-201906-I/en
