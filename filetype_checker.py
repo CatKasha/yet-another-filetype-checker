@@ -401,15 +401,11 @@ def guess_ext(f_path):
             another_buf = buf
             def parce_data_size(init_pos):
                 first_byte = bin(another_buf[init_pos])[2:].zfill(8) # type: ignore
-                data_size_len = 0
-                for i in range(len(first_byte)):
-                    if ("1" == first_byte[i]):
-                        data_size_len = i + 1
-                        break
+                data_size_len = first_byte.find("1") + 1
 
                 data_size = first_byte[data_size_len:]
-                for i in range(data_size_len - 1):
-                    data_size += bin(another_buf[init_pos + 1 + i])[2:].zfill(8) # type: ignore
+                if (data_size_len > 1):
+                    data_size += bin(int.from_bytes(another_buf[init_pos + 1 : init_pos + 1 + data_size_len], byteorder="big"))[2:] # type: ignore
 
                 return data_size_len, int(data_size, 2)
 
