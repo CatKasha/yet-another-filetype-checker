@@ -8,6 +8,17 @@ def guess_ext(f_path):
         buf += b"\x00" * (8 - len(buf))
 
 
+        # Ogg
+        # reference:
+        # https://en.wikipedia.org/wiki/Ogg#File_format
+        # https://www.xiph.org/ogg/doc/framing.html
+        if (buf[0] == 0x4F and
+            buf[1] == 0x67 and
+            buf[2] == 0x67 and
+            buf[3] == 0x53):
+            return "ogg"
+
+
         # FLV
         # reference:
         # https://download.macromedia.com/f4v/video_file_format_spec_v10_1.pdf
