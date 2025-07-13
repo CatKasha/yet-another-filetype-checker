@@ -1,5 +1,6 @@
 import sys
 import os.path
+import re
 
 def guess_ext(f_path):
     f_size = os.path.getsize(f_path)
@@ -542,12 +543,17 @@ def guess_ext(f_path):
 
         # HTML
         if (buf[0] == 0x3C):
-            another_buf = buf + fab.read(3)
-            if (another_buf.lower().startswith(b"<!doctype html") or 
-                another_buf.lower().startswith(b"<html")):
-                fab.seek(f_size - 16, 0)
-                another_buf = fab.read(16)
-                if (another_buf.strip().endswith(b"</html>")):
+            another_buf = buf + fab.read(112)
+            another_buf = another_buf.decode("ascii", errors="ignore")
+
+            html_start = r"^(?:|<!DOCTYPE html>\s*)<html.*>"
+            html_end = r"</html>\s*$"
+            if (re.search(html_start, another_buf, re.IGNORECASE)):
+                if (f_size > 128):
+                    fab.seek(-64, 2)
+                    another_buf = fab.read(64)
+                    another_buf = another_buf.decode("ascii", errors="ignore")
+                if (re.search(html_end, another_buf, re.IGNORECASE)):
                     return "html"
 
             fab.seek(12, 0)
