@@ -543,13 +543,13 @@ def guess_ext(f_path):
 
         # HTML
         if (buf[0] == 0x3C):
-            another_buf = buf + fab.read(112)
+            another_buf = buf + fab.read(500)
             another_buf = another_buf.decode("ascii", errors="ignore")
 
-            html_start = r"^(?:|<!DOCTYPE html>\s*)<html.*>"
+            html_start = r"^(?:|<!DOCTYPE html[^>]*>)\s*(?:<!--.*?-->\s*)*\s*<html[^>]*>"
             html_end = r"</html>\s*$"
             if (re.search(html_start, another_buf, re.IGNORECASE)):
-                if (f_size > 128):
+                if (f_size > 512):
                     fab.seek(-64, 2)
                     another_buf = fab.read(64)
                     another_buf = another_buf.decode("ascii", errors="ignore")
