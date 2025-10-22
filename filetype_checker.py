@@ -417,7 +417,7 @@ def guess_ext(f_path):
 
                 data_size = first_byte[data_size_len:]
                 if (data_size_len > 1):
-                    data_size += bin(int.from_bytes(another_buf[init_pos + 1 : init_pos + 1 + data_size_len], byteorder="big"))[2:] # type: ignore
+                    data_size += bin(int.from_bytes(another_buf[init_pos + 1 : init_pos + data_size_len], byteorder="big"))[2:]
 
                 return data_size_len, int(data_size, 2)
 
